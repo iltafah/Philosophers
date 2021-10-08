@@ -31,28 +31,25 @@ enum e_bool {false, true};
 
 typedef enum e_is_available {not_available, available} t_is_available;
 
-typedef struct s_philo_vars
+typedef struct s_data
 {
 	int				time_to_die;
 	int				time_to_eat;
-	int				num_of_philos;
 	int				time_to_sleep;
+	int				num_of_philos;
 	int				eating_repeat_time;
-	int				simulation_starting_time;
-	// t_is_available	*forks_availability;
+	long int		simulation_starting_time;
 	pthread_mutex_t	*forks_mutex;
-}				t_philo_vars;
+	pthread_mutex_t main_life;
+
+}				t_data;
 
 typedef struct s_philosophers
 {
 	int				id;
-	int				is_eating;
-	int				is_sleeping;
-	int				is_thinking;
-	t_is_available	is_fork_available;
-	t_is_available	*next_fork_ptr;
+	int				remaining_time_to_die;
 }				t_philosophers;
 
-static t_philo_vars	philo_vars;
+static t_data	data;
 
 #endif
