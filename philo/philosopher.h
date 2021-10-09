@@ -29,6 +29,8 @@
 
 enum e_bool {false, true};
 
+typedef enum e_status_msg {taken_fork, eating, sleeping, thinking, death} t_status_msg;
+
 typedef enum e_is_available {not_available, available} t_is_available;
 
 typedef struct s_data
@@ -41,13 +43,15 @@ typedef struct s_data
 	long int		simulation_starting_time;
 	pthread_mutex_t	*forks_mutex;
 	pthread_mutex_t main_life;
+	pthread_mutex_t	printing_mutex;
 
 }				t_data;
 
 typedef struct s_philosophers
 {
 	int				id;
-	int				remaining_time_to_die;
+	long int		remaining_time_to_die;
+	pthread_mutex_t	death_mutex;
 }				t_philosophers;
 
 static t_data	data;
