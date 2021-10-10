@@ -22,46 +22,58 @@ long int	get_curr_time_in_ms(void)
 	return (curr_time_in_ms);
 }
 
-void	print_status(int philo_id, t_status_msg message)
+void	print_status(int philo_id, t_status_msg msg_id)
 {
 	struct timeval	time_struct;
 	long int		curr_time_in_ms;
 	long int		simulation_curr_time_ms;
+	static char		messages[5][20] = 
+	{
+		"has taken a fork",
+		"is eating",
+		"is sleeping",
+		"is thinking",
+		"is died"
+	};
 
 	pthread_mutex_lock(&data.printing_mutex);
 	gettimeofday(&time_struct, NULL);
 	curr_time_in_ms = (time_struct.tv_sec * 1000000 + time_struct.tv_usec)/1000;
 	simulation_curr_time_ms = curr_time_in_ms - data.simulation_starting_time;
-	if (message == taken_fork)
-		printf("%ld %d has taken a fork\n", simulation_curr_time_ms, philo_id);
-	else if (message == eating)
-		printf("%ld %d is eating\n", simulation_curr_time_ms, philo_id);
-	else if (message == sleeping)
-		printf("%ld %d is sleeping\n", simulation_curr_time_ms, philo_id);
-	else if (message == thinking)
-		printf("%ld %d is thinking\n", simulation_curr_time_ms, philo_id);
-	else if (message == death)
-	{
-		printf("%ld %d is died\n", simulation_curr_time_ms, philo_id);
+	// if (message == taken_fork)
+	printf("%ld %d %s\n", simulation_curr_time_ms, philo_id, messages[msg_id]);
+	if (msg_id == death)
 		return ;
-	}
+	// else if (message == eating)
+	// 	printf("%ld %d is eating\n", simulation_curr_time_ms, philo_id);
+	// else if (message == sleeping)
+	// 	printf("%ld %d is sleeping\n", simulation_curr_time_ms, philo_id);
+	// else if (message == thinking)
+	// 	printf("%ld %d is thinking\n", simulation_curr_time_ms, philo_id);
+	// else if (message == death)
+	// {
+	// 	printf("%ld %d is died\n", simulation_curr_time_ms, philo_id);
+	// 	return ;
+	// }
 	pthread_mutex_unlock(&data.printing_mutex);
 }
 
 void	*death_thread(void *given_philo)
 {
 	t_philosophers	*curr_philo;
-	long int		curr_time_in_ms;
+	// long int		curr_time_in_ms;
 
 	curr_philo = (t_philosophers *)given_philo;
 	while (true)
 	{
 		pthread_mutex_lock(&curr_philo->death_mutex);
-		curr_time_in_ms = get_curr_time_in_ms();
-		if (curr_time_in_ms > curr_philo->remaining_time_to_die)
+		// curr_time_in_ms = get_curr_time_in_ms();
+		// if (curr_time_in_ms > curr_philo->remaining_time_to_die)
+		if (curr_philo->remaining_time_to_die == 0)
 			break ;
 		pthread_mutex_unlock(&curr_philo->death_mutex);
-		usleep(500);
+		usleep(1000);
+		curr_philo->remaining_time_to_die--;
 	}
 	print_status(curr_philo->id, death);		
 	pthread_mutex_unlock(&data.main_life);
@@ -78,50 +90,33 @@ void	*simulation(void *given_philo)
 	repated_times = 0;
 	curr_philo = (t_philosophers *)given_philo;
 pthread_t death_thread_id;
-curr_philo->remaining_time_to_die = get_curr_time_in_ms() + data.time_to_die;
+curr_philo->remaining_time_to_die = data.time_to_die;
+// curr_philo->remaining_time_to_die = get_curr_time_in_ms() + data.time_to_die;
 pthread_create(&death_thread_id, NULL, death_thread, (void*)curr_philo);
 	while (1)//repated_times < data.eating_repeat_time)
 	{
-		// if (curr_philo->id % 2 != 0)
-		// {
-		// 	pthread_mutex_lock(&data.forks_mutex[curr_philo->id %  data.num_of_philos]);
-		// 	print_status(curr_philo->id, taken_fork);
-
-		// 	pthread_mutex_lock(&data.forks_mutex[curr_philo->id - 1]);
-		// 	print_status(curr_philo->id, taken_fork);
-		// }	
-		// else
-		// {
-			pthread_mutex_lock(&data.forks_mutex[curr_philo->id - 1]);
-			print_status(curr_philo->id, taken_fork);
+		pthread_mutex_lock(&data.forks_mutex[curr_philo->id - 1]);
+		print_status(curr_philo->id, taken_fork);
 		
-			pthread_mutex_lock(&data.forks_mutex[curr_philo->id %  data.num_of_philos]);
-			print_status(curr_philo->id, taken_fork);
-		// }
-
-			// curr_philo->remaining_time_to_die = get_curr_time_in_ms() + data.time_to_die + data.time_to_eat;
-
+		pthread_mutex_lock(&data.forks_mutex[curr_philo->id %  data.num_of_philos]);
+		print_status(curr_philo->id, taken_fork);
+	
 		pthread_mutex_lock(&curr_philo->death_mutex);
 			print_status(curr_philo->id, eating);
-			curr_philo->remaining_time_to_die = get_curr_time_in_ms() + data.time_to_die;
 			usleep(data.time_to_eat * 1000);
+			// curr_philo->remaining_time_to_die = get_curr_time_in_ms() + data.time_to_die;
+			curr_philo->remaining_time_to_die = data.time_to_die - data.time_to_eat;
 		pthread_mutex_unlock(&curr_philo->death_mutex);
 
 		pthread_mutex_unlock(&data.forks_mutex[curr_philo->id - 1]);
 		pthread_mutex_unlock(&data.forks_mutex[curr_philo->id %  data.num_of_philos]);
 
 	
-		// gettimeofday(&time_struct, NULL);
-		// printf("%ld %d is sleeping\n", ((time_struct.tv_sec * 1000000 + time_struct.tv_usec)/1000 - data.simulation_starting_time), curr_philo->id);
-		// curr_philo->remaining_time_to_die = get_curr_time_in_ms() + data.time_to_die + data.time_to_sleep;
 		print_status(curr_philo->id, sleeping);
 		usleep(data.time_to_sleep * 1000);
 
 
 		print_status(curr_philo->id, thinking);
-		// curr_philo->remaining_time_to_die = get_curr_time_in_ms() + data.time_to_die;
-		// gettimeofday(&time_struct, NULL);
-		// printf("%ld %d is thinking\n", ((time_struct.tv_sec * 1000000 + time_struct.tv_usec)/1000 - data.simulation_starting_time), curr_philo->id);
 		repated_times++;
 	}
 	pthread_mutex_unlock(&data.main_life);
@@ -224,7 +219,7 @@ int main(int argc, char **argv)
 		{
 			pthread_create(&thread_id[i], NULL, simulation, (void *)&philo_simulation[i]);
 			pthread_detach(thread_id[i]);
-			usleep(100);
+			usleep(data.time_to_eat * 1000);
 			i++;
 		}
 		pthread_mutex_lock(&data.main_life);
