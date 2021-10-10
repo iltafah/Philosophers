@@ -26,6 +26,9 @@
 # define MAX_ARGS_NUM 5
 # define MAX_INT 2147483647
 # define MIN_INT -2147483648
+# define one_ms_in_us 1000
+# define one_us_in_ms 0.001
+# define one_s_in_us 1000000
 
 enum e_bool {false, true};
 
