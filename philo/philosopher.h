@@ -44,8 +44,8 @@ typedef struct s_data
 	int				num_of_philos;
 	int				eating_repeat_time;
 	long int		simulation_starting_time;
+	pthread_mutex_t main_mutex;
 	pthread_mutex_t	*forks_mutex;
-	pthread_mutex_t main_life;
 	pthread_mutex_t	printing_mutex;
 
 }				t_data;
@@ -53,7 +53,7 @@ typedef struct s_data
 typedef struct s_philosophers
 {
 	int				id;
-	long int		remaining_time_to_die;
+	long int		time_to_die_in_ms;
 	pthread_mutex_t	death_mutex;
 }				t_philosophers;
 
