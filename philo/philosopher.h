@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:10 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/07 15:49:41 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/14 15:45:13 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,17 @@
 # define one_us_in_ms 0.001
 # define one_s_in_us 1000000
 
-enum e_bool {false, true};
+#define BLK "\e[1;90m"
+#define RED "\e[1;91m"
+#define GRN "\e[1;92m"
+#define YEL "\e[1;93m"
+#define BLU "\e[1;94m"
+#define MAG "\e[1;95m"
+#define CYN "\e[1;96m"
+#define WHT "\e[1;97m"
+#define reset "\e[0m"
+
+typedef enum e_bool {false, true} t_bool;
 
 typedef enum e_status_msg {taken_fork, eating, sleeping, thinking, death} t_status_msg;
 
@@ -47,7 +57,7 @@ typedef struct s_data
 	pthread_mutex_t main_mutex;
 	pthread_mutex_t	*forks_mutex;
 	pthread_mutex_t	printing_mutex;
-
+	t_bool			repeating_option;
 }				t_data;
 
 typedef struct s_philosophers
