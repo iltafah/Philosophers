@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:10 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/14 15:45:13 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/15 20:35:28 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@
 
 typedef enum e_bool {false, true} t_bool;
 
-typedef enum e_status_msg {taken_fork, eating, sleeping, thinking, death} t_status_msg;
+typedef enum e_status_msg {
+	taken_fork, eating, sleeping, thinking, death
+	} t_status_msg;
 
 typedef enum e_is_available {not_available, available} t_is_available;
 
@@ -68,5 +70,12 @@ typedef struct s_philosophers
 }				t_philosophers;
 
 static t_data	data;
+
+long int	get_curr_time_in_ms(void);
+void		*simulation(void *given_philo);
+void		*death_thread(void *given_philo);
+void		create_thread_per_philosopher(t_data *data);
+void		print_status(int philo_id, t_status_msg msg_id);
+
 
 #endif
