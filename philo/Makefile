@@ -6,7 +6,7 @@
 #    By: iltafah <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/06 17:10:00 by iltafah           #+#    #+#              #
-#    Updated: 2021/10/15 20:41:39 by iltafah          ###   ########.fr        #
+#    Updated: 2021/10/16 10:29:56 by iltafah          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ create_thread_per_philosopher.c \
 death_thread.c \
 simulation.c \
 print_status.c \
+get_data_struct.c \
 get_curr_time_in_ms.c
 
 OBJ_DIR := obj

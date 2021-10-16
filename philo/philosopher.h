@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:10 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/15 20:35:28 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/16 19:03:40 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@
 
 typedef enum e_bool {false, true} t_bool;
 
+typedef enum e_option {set, get} t_option;
+
 typedef enum e_status_msg {
 	taken_fork, eating, sleeping, thinking, death
 	} t_status_msg;
@@ -56,6 +58,7 @@ typedef struct s_data
 	int				num_of_philos;
 	int				eating_repeat_time;
 	long int		simulation_starting_time;
+	int				num_of_philos_completed_eating;
 	pthread_mutex_t main_mutex;
 	pthread_mutex_t	*forks_mutex;
 	pthread_mutex_t	printing_mutex;
@@ -69,13 +72,12 @@ typedef struct s_philosophers
 	pthread_mutex_t	death_mutex;
 }				t_philosophers;
 
-static t_data	data;
-
 long int	get_curr_time_in_ms(void);
 void		*simulation(void *given_philo);
 void		*death_thread(void *given_philo);
 void		create_thread_per_philosopher(t_data *data);
-void		print_status(int philo_id, t_status_msg msg_id);
+t_data		*get_data_struct(t_option option, t_data *data_to_set_addr);
+void		print_status(int philo_id, t_status_msg msg_id, t_data *data);
 
 
 #endif

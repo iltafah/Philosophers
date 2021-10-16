@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:01 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/15 21:03:30 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/16 20:22:35 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	convert_arg_to_int(char *argv, int *error)
 	return (num);
 }
 
-int	initialize_data(t_data *data, char **argv)
+int	initialize_data_struct(t_data *data, char **argv)
 {
 	int				error;
 
@@ -56,6 +56,7 @@ int	initialize_data(t_data *data, char **argv)
 		data->repeating_option = false;
 		data->eating_repeat_time = 0;
 	}
+	data->num_of_philos_completed_eating = 0;
 	if (error == ERROR)
 		return (ERROR);
 	data->forks_mutex = malloc(sizeof(pthread_mutex_t) * data->num_of_philos);
@@ -67,19 +68,45 @@ int	initialize_data(t_data *data, char **argv)
 	return (SUCCESS);
 }
 
+void	*eating_count_thread(void *data_ptr)
+{
+	t_data	*data;
+
+	data = (t_data*)data_ptr;/////////////////////////////////////////////////////
+	data = get_data_struct(get, NULL);
+	while (true)
+	{
+		if (data->num_of_philos_completed_eating == data->num_of_philos)
+			break ;
+		usleep(one_ms_in_us);
+	}
+	pthread_mutex_unlock(&data->main_mutex);
+	return (NULL);
+}
+
+void	create_eating_count_thread(t_data *data)
+{
+	pthread_t	thread_id;
+
+	pthread_create(&thread_id, NULL, eating_count_thread, (void *)&data);
+	pthread_detach(thread_id);
+}
+
 int main(int argc, char **argv)
 {
-	int					return_code;
+	int		return_code;
+	t_data	data;
 
     if (argc == MAX_ARGS_NUM || argc == MAX_ARGS_NUM + OPTIONAL_ARG)
     {
-		return_code = initialize_data(&data, argv + 1);
+		get_data_struct(set, &data);
+		return_code = initialize_data_struct(&data, argv + 1);
 		if (return_code == ERROR)
 		{
 			printf("Error\n");
 			return (0);
 		}
-		// printf("%d\n",data.num_of_philos);
+		create_eating_count_thread(&data);
 		create_thread_per_philosopher(&data);
     }
 	else

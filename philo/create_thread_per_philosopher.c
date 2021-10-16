@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 20:32:06 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/15 21:03:25 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/16 19:02:40 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ void	create_thread_per_philosopher(t_data *data)
 	pthread_t		thread_id;
 	t_philosophers	*philosophers;
 	i = 0;
+
 	pthread_mutex_lock(&data->main_mutex);
 	initialize_philos_vars(&philosophers, data);
 	while (i < data->num_of_philos)
 	{
-		// printf("%d\n",data->num_of_philos);
 		pthread_create(&thread_id, NULL, simulation, (void *)&philosophers[i]);
 		pthread_detach(thread_id);
 		i++;
