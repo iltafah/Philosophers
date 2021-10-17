@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 20:30:07 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/17 14:38:06 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/17 21:05:46 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,16 @@
 
 void	pick_up_forks(int philo_id, t_data *data)
 {
-	if (philo_id % 2 == 1)
-	{
-		pthread_mutex_lock(&data->forks_mutex[philo_id % data->num_of_philos]);
-		print_status(philo_id, taken_fork, data);
-		pthread_mutex_lock(&data->forks_mutex[philo_id - 1]);
-		print_status(philo_id, taken_fork, data);
-	}
-	else if (philo_id % 2 == 0)
-	{
-		pthread_mutex_lock(&data->forks_mutex[philo_id - 1]);
-		print_status(philo_id, taken_fork, data);
-		pthread_mutex_lock(&data->forks_mutex[philo_id % data->num_of_philos]);
-		print_status(philo_id, taken_fork, data);
-	}
+	sem_wait(data->forks_semaphore);
+	print_status(philo_id, taken_fork, data);
+	sem_wait(data->forks_semaphore);
+	print_status(philo_id, taken_fork, data);
 }
 
-void	drop_forks(int philo_id, t_data *data)
+void	drop_forks(t_data *data)
 {
-	pthread_mutex_unlock(&data->forks_mutex[philo_id - 1]);
-	pthread_mutex_unlock(&data->forks_mutex[philo_id % data->num_of_philos]);
+	sem_post(data->forks_semaphore);
+	sem_post(data->forks_semaphore);
 }
 
 void	eat_spaghetti(t_philosophers *philo, t_data *data)
@@ -41,12 +31,12 @@ void	eat_spaghetti(t_philosophers *philo, t_data *data)
 	int		remaining_time;
 
 	remaining_time = data->time_to_die - data->time_to_eat;
-	pthread_mutex_lock(&philo->death_mutex);
+	sem_wait(philo->death_sem);
 	print_status(philo->id, eating, data);
 	usleep(data->time_to_eat * ONE_MS_IN_US);
-	drop_forks(philo->id, data);
+	drop_forks(data);
 	philo->time_to_die_in_ms = get_curr_time_in_ms() + remaining_time;
-	pthread_mutex_unlock(&philo->death_mutex);
+	sem_post(philo->death_sem);
 }
 
 void	sleeping_time(int philo_id, t_data *data)
@@ -73,13 +63,13 @@ void	*simulation(void *given_philo)
 		eat_spaghetti(curr_philo, data);
 		sleeping_time(curr_philo->id, data);
 		print_status(curr_philo->id, thinking, data);
-		if (data->repeating_option == true
-			&& ++eating_times == data->eating_repeat_time)
-		{
-			data->num_of_philos_completed_eating++;
-			pthread_mutex_lock(&curr_philo->death_mutex);
-			break ;
-		}
+		// if (data->repeating_option == true
+		// 	&& ++eating_times == data->eating_repeat_time)
+		// {
+		// 	data->num_of_philos_completed_eating++;
+		// 	pthread_mutex_lock(&curr_philo->death_mutex);
+		// 	break ;
+		// }
 	}
 	return (NULL);
 }

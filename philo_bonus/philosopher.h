@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:10 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/17 14:43:34 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/17 21:16:54 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <pthread.h>
+# include <semaphore.h>
 # include <sys/time.h>
 
 # define NONE 0
@@ -63,9 +64,9 @@ typedef struct s_data
 	int				eating_repeat_time;
 	long int		simulation_starting_time;
 	int				num_of_philos_completed_eating;
-	pthread_mutex_t	main_mutex;
-	pthread_mutex_t	*forks_mutex;
-	pthread_mutex_t	printing_mutex;
+	sem_t			*forks_semaphore;
+	sem_t			*main_sem;
+	sem_t			*printing_sem;
 	t_bool			repeating_option;
 }				t_data;
 
@@ -73,14 +74,14 @@ typedef struct s_philosophers
 {
 	int				id;
 	long int		time_to_die_in_ms;
-	pthread_mutex_t	death_mutex;
+	sem_t			*death_sem;
 }				t_philosophers;
 
 long int	get_curr_time_in_ms(void);
 void		*simulation(void *given_philo);
 void		*death_thread(void *given_philo);
 void		create_eating_count_thread(t_data *data);
-void		create_thread_per_philosopher(t_data *data);
+void		create_process_per_philosopher(t_data *data);
 t_data		*get_data_struct(t_option option, t_data *data_to_set_addr);
 void		print_status(int philo_id, t_status_msg msg_id, t_data *data);
 

@@ -6,7 +6,7 @@
 #    By: iltafah <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/06 17:10:00 by iltafah           #+#    #+#              #
-#    Updated: 2021/10/17 14:28:38 by iltafah          ###   ########.fr        #
+#    Updated: 2021/10/17 14:58:02 by iltafah          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ print_status.c            \
 get_data_struct.c          \
 get_curr_time_in_ms.c       \
 create_eating_count_thread.c \
-create_thread_per_philosopher.c
+create_process_per_philosopher.c
 
 OBJ_DIR := obj
 

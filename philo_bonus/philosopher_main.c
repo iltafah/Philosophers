@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:01 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/17 14:36:35 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/17 21:30:07 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	convert_arg_to_int(char *argv, int *error)
 
 	i = 0;
 	num = 0;
+	if (argv[0] == '\0')
+		*error = ERROR;
 	while (argv[i] != '\0')
 	{
 		if (argv[i] < '0' || argv[i] > '9')
@@ -37,16 +39,14 @@ int	convert_arg_to_int(char *argv, int *error)
 	return (num);
 }
 
-void	initialize_mutexes(t_data *data)
+void	initialize_semaphores(t_data *data)
 {
-	int		i;
-
-	i = 0;
-	data->forks_mutex = malloc(sizeof(pthread_mutex_t) * data->num_of_philos);
-	while (i < data->num_of_philos)
-		pthread_mutex_init(&data->forks_mutex[i++], NULL);
-	pthread_mutex_init(&data->main_mutex, NULL);
-	pthread_mutex_init(&data->printing_mutex, NULL);
+	sem_unlink("forks");
+	data->forks_semaphore =	sem_open("forks", O_CREAT, 0777, data->num_of_philos);
+	sem_unlink("print");
+	data->printing_sem = sem_open("print", O_CREAT, 0777, 1);
+	sem_unlink("main");
+	data->main_sem = sem_open("main", O_CREAT, 0777, 0);
 }
 
 int	initialize_data_struct(t_data *data, char **argv)
@@ -68,8 +68,8 @@ int	initialize_data_struct(t_data *data, char **argv)
 	}
 	if (error == ERROR)
 		return (ERROR);
-	initialize_mutexes(data);
-	data->simulation_starting_time = get_curr_time_in_ms();
+	initialize_semaphores(data);
+ 	data->simulation_starting_time = get_curr_time_in_ms();
 	return (SUCCESS);
 }
 
@@ -87,8 +87,8 @@ int	main(int argc, char **argv)
 			printf("Error\n");
 			return (0);
 		}
-		create_eating_count_thread(&data);
-		create_thread_per_philosopher(&data);
+		// create_eating_count_thread(&data);
+		create_process_per_philosopher(&data);
 	}
 	else
 		printf("Error\n");
