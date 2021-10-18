@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 20:30:07 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/18 18:44:41 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/18 21:54:56 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ void	eat_spaghetti(t_philosophers *philo, t_data *data)
 	drop_forks(data);
 	data->philos_eating_time++;
 	philo->time_to_die_in_ms = get_curr_time_in_ms() + remaining_time;
+
+	sem_post(data->eating_time_sem);
+
 	sem_post(philo->death_sem);
 }
 
@@ -62,13 +65,13 @@ void	*simulation(void *given_philo)
 	{
 		pick_up_forks(curr_philo->id, data);
 		eat_spaghetti(curr_philo, data);
-		eating_time++;
-		if (data->repeating_option == true
-			&& eating_time == data->eating_repeat_time)
-		{
-			sem_post(data->eating_time_sem);
-			break ;
-		}
+		// eating_time++;
+		// if (data->repeating_option == true
+		// 	&& eating_time == data->eating_repeat_time)
+		// {
+		// 	sem_post(data->eating_time_sem);
+		// 	break ;
+		// }
 		sleeping_time(curr_philo->id, data);
 		print_status(curr_philo->id, thinking, data);
 	}

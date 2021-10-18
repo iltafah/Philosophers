@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:01 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/18 19:15:40 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/18 21:52:05 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	initialize_semaphores(t_data *data)
 	sem_unlink("main");
 	data->main_sem = sem_open("main", O_CREAT, 0777, 0);
 	sem_unlink("eating");
-	data->eating_time_sem = sem_open("eating", O_CREAT, 0777, data->num_of_philos);
+	data->eating_time_sem = sem_open("eating", O_CREAT, 0777, 0);
 }
 
 int	initialize_data_struct(t_data *data, char **argv)

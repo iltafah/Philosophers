@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 14:27:25 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/18 18:59:39 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/18 21:57:18 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,27 @@
 void	*eating_count_thread(void *data_ptr)
 {
 	t_data	*data;
+	int		curr_eating_time;
 
 	data = (t_data *)data_ptr;
-	// while (true)
-	// {
-	// 	if (data->num_of_philos_completed_eating == data->num_of_philos)
-	// 		break ;
-	// 	usleep(ONE_MS_IN_US);
-	// }
-	int		i;
-
-	i = 0;
-	while (i++ < data->num_of_philos)
+	curr_eating_time = 0;
+	while (true)
+	{
 		sem_wait(data->eating_time_sem);
-	sem_wait(data->eating_time_sem);
-	printf(">>>%d<<<\n", 42);
+		curr_eating_time++;
+		// printf(">>%d<<\n", curr_eating_time);
+		if (curr_eating_time == data->total_eating_repeat_time)
+			break ;
+		// usleep(ONE_MS_IN_US);
+	}
+	// int		i;
+
+	// i = 0;
+	// while (i++ < data->num_of_philos)
+	// 	sem_wait(data->eating_time_sem);
+	// sem_wait(data->eating_time_sem);
+	// printf(">>>%d<<<\n", 42);
+	sem_wait(data->printing_sem);
 	sem_post(data->main_sem);
 	return (NULL);
 }
