@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:10 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/17 21:16:54 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/18 16:38:21 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef enum e_status_msg {
 	sleeping,
 	thinking,
 	death
-}t_status_msg;
+}	t_status_msg;
 
 typedef enum e_is_available {not_available, available}	t_is_available;
 
@@ -62,11 +62,14 @@ typedef struct s_data
 	int				time_to_sleep;
 	int				num_of_philos;
 	int				eating_repeat_time;
+	int				philos_eating_time;
+	int				total_eating_repeat_time;
 	long int		simulation_starting_time;
 	int				num_of_philos_completed_eating;
 	sem_t			*forks_semaphore;
 	sem_t			*main_sem;
 	sem_t			*printing_sem;
+	sem_t			*eating_time_sem;
 	t_bool			repeating_option;
 }				t_data;
 

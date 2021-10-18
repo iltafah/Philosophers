@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 20:30:07 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/17 21:05:46 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/18 18:44:41 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	eat_spaghetti(t_philosophers *philo, t_data *data)
 	print_status(philo->id, eating, data);
 	usleep(data->time_to_eat * ONE_MS_IN_US);
 	drop_forks(data);
+	data->philos_eating_time++;
 	philo->time_to_die_in_ms = get_curr_time_in_ms() + remaining_time;
 	sem_post(philo->death_sem);
 }
@@ -49,10 +50,10 @@ void	*simulation(void *given_philo)
 {
 	t_data			*data;
 	t_philosophers	*curr_philo;
-	int				eating_times;
 	pthread_t		death_thread_id;
+	int				eating_time;
 
-	eating_times = 0;
+	eating_time = 0;
 	data = get_data_struct(get, NULL);
 	curr_philo = (t_philosophers *)given_philo;
 	pthread_create(&death_thread_id, NULL, death_thread, (void *)curr_philo);
@@ -61,15 +62,15 @@ void	*simulation(void *given_philo)
 	{
 		pick_up_forks(curr_philo->id, data);
 		eat_spaghetti(curr_philo, data);
+		eating_time++;
+		if (data->repeating_option == true
+			&& eating_time == data->eating_repeat_time)
+		{
+			sem_post(data->eating_time_sem);
+			break ;
+		}
 		sleeping_time(curr_philo->id, data);
 		print_status(curr_philo->id, thinking, data);
-		// if (data->repeating_option == true
-		// 	&& ++eating_times == data->eating_repeat_time)
-		// {
-		// 	data->num_of_philos_completed_eating++;
-		// 	pthread_mutex_lock(&curr_philo->death_mutex);
-		// 	break ;
-		// }
 	}
 	return (NULL);
 }

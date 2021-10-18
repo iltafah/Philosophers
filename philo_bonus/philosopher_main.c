@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:01 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/17 21:30:07 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/18 19:15:40 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	initialize_semaphores(t_data *data)
 	data->printing_sem = sem_open("print", O_CREAT, 0777, 1);
 	sem_unlink("main");
 	data->main_sem = sem_open("main", O_CREAT, 0777, 0);
+	sem_unlink("eating");
+	data->eating_time_sem = sem_open("eating", O_CREAT, 0777, data->num_of_philos);
 }
 
 int	initialize_data_struct(t_data *data, char **argv)
@@ -58,13 +60,16 @@ int	initialize_data_struct(t_data *data, char **argv)
 	data->time_to_die = convert_arg_to_int(argv[1], &error);
 	data->time_to_eat = convert_arg_to_int(argv[2], &error);
 	data->time_to_sleep = convert_arg_to_int(argv[3], &error);
+	data->philos_eating_time = 0;
 	data->eating_repeat_time = 0;
 	data->repeating_option = false;
 	data->num_of_philos_completed_eating = 0;
+	data->total_eating_repeat_time = 0;
 	if (argv[4] != NULL)
 	{
 		data->repeating_option = true;
 		data->eating_repeat_time = convert_arg_to_int(argv[4], &error);
+		data->total_eating_repeat_time = data->eating_repeat_time * data->num_of_philos;
 	}
 	if (error == ERROR)
 		return (ERROR);
@@ -87,7 +92,7 @@ int	main(int argc, char **argv)
 			printf("Error\n");
 			return (0);
 		}
-		// create_eating_count_thread(&data);
+		create_eating_count_thread(&data);
 		create_process_per_philosopher(&data);
 	}
 	else
