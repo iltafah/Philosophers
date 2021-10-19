@@ -6,11 +6,24 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 14:27:25 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/18 21:57:18 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/19 20:29:12 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philosopher.h"
+
+void	wait_for_processes_to_exit(t_data *data)
+{
+	int	i;
+	int	exit_status;
+
+	i = 0;
+	while (i < data->num_of_philos)
+	{
+		waitpid(data->process_id[i], &exit_status, 0);
+		i++;
+	}
+}
 
 void	*eating_count_thread(void *data_ptr)
 {
@@ -23,20 +36,11 @@ void	*eating_count_thread(void *data_ptr)
 	{
 		sem_wait(data->eating_time_sem);
 		curr_eating_time++;
-		// printf(">>%d<<\n", curr_eating_time);
-		if (curr_eating_time == data->total_eating_repeat_time)
+		if (curr_eating_time == data->num_of_philos)
 			break ;
-		// usleep(ONE_MS_IN_US);
 	}
-	// int		i;
-
-	// i = 0;
-	// while (i++ < data->num_of_philos)
-	// 	sem_wait(data->eating_time_sem);
-	// sem_wait(data->eating_time_sem);
-	// printf(">>>%d<<<\n", 42);
-	sem_wait(data->printing_sem);
-	sem_post(data->main_sem);
+	wait_for_processes_to_exit(data);
+	sem_post(data->main_lock_sem);
 	return (NULL);
 }
 

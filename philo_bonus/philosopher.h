@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:10 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/18 16:38:21 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/19 19:04:59 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <pthread.h>
 # include <semaphore.h>
 # include <sys/time.h>
+# include <signal.h>
 
 # define NONE 0
 # define ERROR -1
@@ -63,12 +64,12 @@ typedef struct s_data
 	int				num_of_philos;
 	int				eating_repeat_time;
 	int				philos_eating_time;
-	int				total_eating_repeat_time;
 	long int		simulation_starting_time;
 	int				num_of_philos_completed_eating;
-	sem_t			*forks_semaphore;
-	sem_t			*main_sem;
+	pid_t			*process_id;
+	sem_t			*forks_sem;
 	sem_t			*printing_sem;
+	sem_t			*main_lock_sem;
 	sem_t			*eating_time_sem;
 	t_bool			repeating_option;
 }				t_data;

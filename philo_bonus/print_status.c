@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 20:27:58 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/17 21:17:44 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/19 14:44:21 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	print_status(int philo_id, t_status_msg msg_id, t_data *data)
 		"is died"
 	};
 
-	// pthread_mutex_lock(&data->printing_mutex);
 	sem_wait(data->printing_sem);
 	curr_time_in_ms = get_curr_time_in_ms();
 	simulation_curr_time_ms = curr_time_in_ms - data->simulation_starting_time;
@@ -35,5 +34,4 @@ void	print_status(int philo_id, t_status_msg msg_id, t_data *data)
 	if (msg_id == death)
 		return ;
 	sem_post(data->printing_sem);
-	// pthread_mutex_unlock(&data->printing_mutex);
 }
