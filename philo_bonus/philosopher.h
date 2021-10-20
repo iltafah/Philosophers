@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:10 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/19 19:04:59 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/20 15:32:15 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,12 @@ typedef struct s_data
 	int				time_to_sleep;
 	int				num_of_philos;
 	int				eating_repeat_time;
-	int				philos_eating_time;
 	long int		simulation_starting_time;
-	int				num_of_philos_completed_eating;
-	pid_t			*process_id;
+	pid_t			*processes_ids;
 	sem_t			*forks_sem;
 	sem_t			*printing_sem;
 	sem_t			*main_lock_sem;
 	sem_t			*eating_time_sem;
-	t_bool			repeating_option;
 }				t_data;
 
 typedef struct s_philosophers

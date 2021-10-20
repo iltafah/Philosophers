@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:01 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/19 14:46:25 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/20 15:21:51 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	initialize_data_struct(t_data *data, char **argv)
 		data->repeating_option = true;
 		data->eating_repeat_time = convert_arg_to_int(argv[4], &error);
 	}
-	if (error == ERROR)
+	if (error == ERROR || data->num_of_philos == 0)
 		return (ERROR);
 	initialize_mutexes(data);
 	data->simulation_starting_time = get_curr_time_in_ms();
@@ -87,8 +87,11 @@ int	main(int argc, char **argv)
 			printf("Error\n");
 			return (0);
 		}
-		create_eating_count_thread(&data);
-		create_thread_per_philosopher(&data);
+		if (data.num_of_philos > 0)
+		{
+			create_eating_count_thread(&data);
+			create_thread_per_philosopher(&data);
+		}
 	}
 	else
 		printf("Error\n");

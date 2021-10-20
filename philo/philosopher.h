@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/05 18:31:10 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/17 14:43:34 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/20 12:49:48 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_data
 	pthread_mutex_t	main_mutex;
 	pthread_mutex_t	*forks_mutex;
 	pthread_mutex_t	printing_mutex;
+	pthread_mutex_t	eating_time_mutex;
 	t_bool			repeating_option;
 }				t_data;
 

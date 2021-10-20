@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/17 14:27:25 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/19 20:29:12 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/20 14:49:10 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	wait_for_processes_to_exit(t_data *data)
 	i = 0;
 	while (i < data->num_of_philos)
 	{
-		waitpid(data->process_id[i], &exit_status, 0);
+		waitpid(data->processes_ids[i], &exit_status, 0);
 		i++;
 	}
 }

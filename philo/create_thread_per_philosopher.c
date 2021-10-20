@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 20:32:06 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/17 14:44:13 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/20 15:20:38 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ void	destroy_mutexes(t_data	*data, t_philosophers *philosopher)
 	pthread_mutex_destroy(&data->printing_mutex);
 }
 
-void	free_allocated_data(t_philosophers **philosophers)
+void	free_allocated_data(t_philosophers **philosophers, t_data *data)
 {
 	free(*philosophers);
 	*philosophers = NULL;
+	free(data->forks_mutex);
+	data->forks_mutex = NULL;
 }
 
 void	initialize_philos_vars(t_philosophers **philosophers, t_data *data)
@@ -66,5 +68,5 @@ void	create_thread_per_philosopher(t_data *data)
 	}
 	pthread_mutex_lock(&data->main_mutex);
 	destroy_mutexes(data, philosophers);
-	free_allocated_data(&philosophers);
+	free_allocated_data(&philosophers, data);
 }

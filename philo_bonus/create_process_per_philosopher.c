@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 20:32:06 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/19 21:51:21 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/20 14:49:01 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	free_allocated_data(t_philosophers **philosophers, t_data *data)
 {
 	free(*philosophers);
 	*philosophers = NULL;
-	free(data->process_id);
-	data->process_id = NULL;
+	free(data->processes_ids);
+	data->processes_ids = NULL;
 }
 
 void	clear_resources(t_philosophers **philosophers, t_data *data)
@@ -38,7 +38,7 @@ void	kill_processes(t_data *data)
 
 	i = 0;
 	while (i < data->num_of_philos)
-		kill(data->process_id[i++], SIGKILL);
+		kill(data->processes_ids[i++], SIGKILL);
 }
 
 void	initialize_philos_vars(t_philosophers **philosophers, t_data *data)
@@ -64,15 +64,15 @@ void	create_process_per_philosopher(t_data *data)
 	initialize_philos_vars(&philosophers, data);
 	while (i < data->num_of_philos)
 	{
-		data->process_id[i] = fork();
-		if (data->process_id[i] == 0)
+		data->processes_ids[i] = fork();
+		if (data->processes_ids[i] == 0)
 		{
 			sem_unlink("death");
 			philosophers[i].death_sem = sem_open("death", O_CREAT, 0777, 1);
 			simulation((void *)&philosophers[i]);
 			exit(0);
 		}
-		else if (data->process_id[i] == -1)
+		else if (data->processes_ids[i] == -1)
 		{
 			printf("Error\n");
 			exit(0);
