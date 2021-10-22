@@ -6,7 +6,7 @@
 #    By: iltafah <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/06 17:10:00 by iltafah           #+#    #+#              #
-#    Updated: 2021/10/19 15:35:15 by iltafah          ###   ########.fr        #
+#    Updated: 2021/10/20 15:35:53 by iltafah          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,8 @@ get_curr_time_in_ms.c       \
 create_eating_count_thread.c \
 create_process_per_philosopher.c
 
+HEADER := philosopher.h
+
 OBJ_DIR := obj
 
 MAND_OBJ := $(addprefix $(OBJ_DIR)/, $(MAND_SRC:%.c=%.o))
@@ -34,7 +36,7 @@ all: $(NAME)
 $(NAME): $(MAND_OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
-$(OBJ_DIR)/%.o : %.c
+$(OBJ_DIR)/%.o : %.c $(HEADER)
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -o $@ -c $<
 

@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 20:32:06 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/20 14:49:01 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/21 15:13:33 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ void	create_process_per_philosopher(t_data *data)
 	int				i;
 	t_philosophers	*philosophers;
 
-	i = 0;
+	i = -1;
 	initialize_philos_vars(&philosophers, data);
-	while (i < data->num_of_philos)
+	while (++i < data->num_of_philos)
 	{
 		data->processes_ids[i] = fork();
 		if (data->processes_ids[i] == 0)
@@ -77,7 +77,7 @@ void	create_process_per_philosopher(t_data *data)
 			printf("Error\n");
 			exit(0);
 		}
-		i++;
+		usleep(100);
 	}
 	sem_wait(data->main_lock_sem);
 	kill_processes(data);

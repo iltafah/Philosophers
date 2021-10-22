@@ -6,7 +6,7 @@
 /*   By: iltafah <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 20:30:07 by iltafah           #+#    #+#             */
-/*   Updated: 2021/10/20 12:53:32 by iltafah          ###   ########.fr       */
+/*   Updated: 2021/10/20 16:06:00 by iltafah          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,10 @@
 
 void	pick_up_forks(int philo_id, t_data *data)
 {
-	if (philo_id % 2 == 1)
-	{
-		pthread_mutex_lock(&data->forks_mutex[philo_id % data->num_of_philos]);
-		print_status(philo_id, taken_fork, data);
-		pthread_mutex_lock(&data->forks_mutex[philo_id - 1]);
-		print_status(philo_id, taken_fork, data);
-	}
-	else if (philo_id % 2 == 0)
-	{
-		pthread_mutex_lock(&data->forks_mutex[philo_id - 1]);
-		print_status(philo_id, taken_fork, data);
-		pthread_mutex_lock(&data->forks_mutex[philo_id % data->num_of_philos]);
-		print_status(philo_id, taken_fork, data);
-	}
+	pthread_mutex_lock(&data->forks_mutex[philo_id - 1]);
+	print_status(philo_id, taken_fork, data);
+	pthread_mutex_lock(&data->forks_mutex[philo_id % data->num_of_philos]);
+	print_status(philo_id, taken_fork, data);
 }
 
 void	drop_forks(int philo_id, t_data *data)
@@ -71,8 +61,6 @@ void	*simulation(void *given_philo)
 	{
 		pick_up_forks(curr_philo->id, data);
 		eat_spaghetti(curr_philo, data);
-		sleeping_time(curr_philo->id, data);
-		print_status(curr_philo->id, thinking, data);
 		if (data->repeating_option == true
 			&& ++eating_times == data->eating_repeat_time)
 		{
@@ -80,6 +68,8 @@ void	*simulation(void *given_philo)
 			pthread_mutex_lock(&curr_philo->death_mutex);
 			break ;
 		}
+		sleeping_time(curr_philo->id, data);
+		print_status(curr_philo->id, thinking, data);
 	}
 	return (NULL);
 }
